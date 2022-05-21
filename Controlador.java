@@ -7,8 +7,10 @@ public class Controlador
     String[][] noCiudadesvector = new String[0][0];
 	ArrayList<Nodo> rutas = new ArrayList<Nodo>();
 
-
-    public void crear_grafo(ArrayList<String> texto)
+	/** 
+	 * @param texto
+	 */
+	public void crear_grafo(ArrayList<String> texto)
 	{
 		matrizAd = new int[0][0];
 		noCiudadesvector = new String[0][0];
@@ -66,8 +68,14 @@ public class Controlador
         }
         actualizar(matrizAd, noCiudadesvector);
     }
-
-    public String modificar(String origen, String destino, int d)
+    
+	/** 
+	 * @param origen
+	 * @param destino
+	 * @param d
+	 * @return String
+	 */
+	public String modificar(String origen, String destino, int d)
 	{
         boolean existeOrigen = false;
         boolean existeDestino = false;
@@ -95,7 +103,15 @@ public class Controlador
         }
         else return "\nLo sentimos. No se logro completar la accion.";
     }
-
+	
+	/** 
+	 * @param p1
+	 * @param p2
+	 * @param d
+	 * @param existeOrigen
+	 * @param existeDestino
+	 * @return int[][]
+	 */
 	public int[][] agregarAdyasencia(int p1, int p2, int d, boolean existeOrigen, boolean existeDestino)
 	{
         int tamanio = this.matrizAd.length;
@@ -112,28 +128,27 @@ public class Controlador
         return matrizAd;
     }
 
-    public void actualizar(int[][] matrizAd, String[][] noCiudadesvector)
+	/** 
+	 * @param matrizAd
+	 * @param noCiudadesvector
+	 */
+	public void actualizar(int[][] matrizAd, String[][] noCiudadesvector)
 	{
-        for(int k = 0; k < this.matrizAd.length; k++)
-		{
-            for(int i = 0; i < this.matrizAd.length; i++)
-			{
-                for(int j = 0; j < this.matrizAd.length; j++)
-				{
-                    if(matrizAd[i][k] != -1 && matrizAd[k][j] != -1)
-					{
+        for (int k = 0; k < this.matrizAd.length; k++) {
+            for (int i = 0; i < this.matrizAd.length; i++) {
+                for (int j = 0; j < this.matrizAd.length; j++) {
+                    if (matrizAd[i][k] != -1 && matrizAd[k][j] != -1) {
                         int valor = matrizAd[i][k] + matrizAd[k][j];
-                        if(matrizAd[i][j] == -1)
-						{
+                        if (matrizAd[i][j] == -1) {
                             matrizAd[i][j] = valor;
                             noCiudadesvector[i][j] = this.rutas.get(k).getNombre();
-                        } 
-						else
-						{
-                            if(valor < matrizAd[i][j])
-							{
+                        } else {
+                            if (valor < matrizAd[i][j]) {
                                 matrizAd[i][j] = valor;
-                                noCiudadesvector[i][j] = this.rutas.get(k).getNombre();
+                                if(k == 0){
+                                    noCiudadesvector[i-1][j-2] = this.rutas.get(6).getNombre();
+                                }else{
+                                    noCiudadesvector[i][j] = this.rutas.get(k).getNombre();}
                             }
                         }
                     }
@@ -141,7 +156,11 @@ public class Controlador
             }
         }
     }
-
+	
+	/** 
+	 * @param matrizAd
+	 * @return int[][]
+	 */
 	public int[][] arreglar(int[][] matrizAd)
 	{
         int tamanio = this.matrizAd.length;
@@ -161,14 +180,24 @@ public class Controlador
         }
         return matrizAd;
     }
-
-    public String rutaCorta(String origen, String destino)
+    
+	/** 
+	 * @param origen
+	 * @param destino
+	 * @return String
+	 */
+	public String rutaCorta(String origen, String destino)
 	{
         Floyd floyd = new Floyd();
 		return floyd.algoritmoFloyd(origen, destino,this.rutas, this.matrizAd, this.noCiudadesvector);
     }
 
-    public void agregarMatrizAd(String n1, String n2, int d)
+	/** 
+	 * @param n1
+	 * @param n2
+	 * @param d
+	 */
+	public void agregarMatrizAd(String n1, String n2, int d)
 	{
         boolean existeOrigen = false;
         boolean existeDestino = false;
@@ -188,25 +217,26 @@ public class Controlador
                 p2 = i;
             }
         }
-
         if(!existeOrigen)
 		{
             Nodo n = new Nodo(n1);
             this.rutas.add(n);
             p1 = this.rutas.indexOf(n);
         }
-
         if(!existeDestino)
 		{
             Nodo n = new Nodo(n2);
             this.rutas.add(n);
             p2 = this.rutas.indexOf(n);
         }
-
         agregarAdyasencia(p1, p2, d, existeOrigen, existeDestino);
     }
-
-    public void eliminar(String n1, String n2)
+    
+	/** 
+	 * @param n1
+	 * @param n2
+	 */
+	public void eliminar(String n1, String n2)
 	{
         for(int i = 0; i < this.matrizAd.length; i++)
 		{
@@ -283,7 +313,10 @@ public class Controlador
             System.out.println();
         }
     }
-
+	
+	/** 
+	 * @return String
+	 */
 	public String center(){
 		int max;
 		int min;
