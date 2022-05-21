@@ -1,82 +1,119 @@
-import java.io.File;
+/**
+ * Clase Principal. Sera la encargada de interactuar con el usuario
+ * Autores: 
+ *      Herber Sebastian Silva Muñoz -	21764
+ *      Daniel Esteban Morales Urizar - 21785 
+ *      Elias Alberto Alvarado Raxon -	21808
+ *      
+ * Fecha de creacion: 20/05/2022
+ */
+
 import java.util.*;
+import java.io.*;
 
-import javax.swing.text.html.HTMLDocument.BlockElement;
-/*
-	Hoja de Trabajo 10
-	Programadores:
-		Daniel Esteban Morales Urizar - 21785
-		Herber Sebastian Silva Muñoz - 21764
-		Elías Alberto Alvarado Raxón - 21808
-*/
-import java.io.FileWriter;
-public class Principal {
-	File archivo;
-	FileWriter fw;
-	static Scanner sw;
-	
+
+public class Principal
+{
+	/** 
+	 * @param args
+	 */
 	public static void main(String[] args) {
-		try {
-			System.out.println("Bienvenido\nAsegurese que su archivo no tenga ningun enter de mas :)")
-			Scanner sr = new Scanner (System.in);
-			//System.out.println("Ingrese la ruta del archivo (incluya el nombre y la extención)");
-			//String ruta = sr.nextLine();
-			String ruta = "C:\\Users\\pc\\Documents\\uvg\\sem3\\algoritmos\\Hojas\\Hoja10\\guategrafo.txt";
-			File archivo = new File(ruta);
-			ArrayList<String> texto = new ArrayList<String>();
-			if(!archivo.exists()) {
-				System.out.println("Archivo no encontrado, varificar ruta");
-                
-			}else {
-				sw = new Scanner(archivo, "UTF-8");
-				while (sw.hasNextLine()) {
-					texto.add(sw.nextLine());}
-				}
-			sw.close();
-			Controlador contr = new Controlador();
-			
-			contr.crear_grafo(texto);
+        File archivo;
+        Scanner sw = new Scanner(System.in);
+		Controlador controlador = new Controlador();
+        String menu = "\n¿Que desea realizar?\n1. Agregar conexion \n2. Buscar ruta mas corta\n3. Calcular el centro\n4. Salir";
+        boolean Cicloprincipal = true;
+		int opcion = 0;
+		String ciudad1 = "";
+		String ciudad2 = "";
+		String distancia = "";
 
-			String menu = "1. Agregar coneccion \n"+
-			"2. Buscar ruta mas corta\n"+
-			"3. Calcular el centro\n"+
-			"4. Salir";
-			boolean Cicloprincipal = true;
-			while(Cicloprincipal){
-				System.out.println("¿Que desea hacer?\n"+menu);
-				int opcion = sr.nextInt();
-				sr.nextLine();
-				switch (opcion) {
-					case 1:
+        try {
+            //String ruta = "F:\\Programacion\\HojaDeTrabajo10\\src\\guategrafo.txt";
+			System.out.println("\nIngrese la ruta de su archivo txt.");
+			String ruta = sw.nextLine() + "\\guategrafo.txt";
+            archivo = new File(ruta);
+            Scanner obj = new Scanner(archivo);
+            ArrayList<String> array = new ArrayList<>();
+            String texto;
+            while (obj.hasNextLine()) {
+                texto = obj.nextLine();
+                if (!texto.equals("")) {
+                    array.add(texto);
+                }
+            }
+
+            obj.close();
+            
+
+            controlador.crear_grafo(array);
+
+            while (Cicloprincipal)
+			{
+                opcion = pregunta(menu, 4);
+                switch (opcion) {
+                    case 1:
+                        System.out.println("\nIngrese nombre de ciudad de salida");
+                        ciudad1 = sw.nextLine();
+                        System.out.println("\nIngrese nombre de ciudad de llegada");
+                        ciudad2 = sw.nextLine();
+                        System.out.println("\nIngrese la distancia entre ciudades en km");
+                        distancia = sw.nextLine();
+                        String agregar = ciudad1.trim() + " " + ciudad2.trim() + " " + distancia.trim();
+                        array.add(agregar);
+                        controlador.crear_grafo(array); //Se vuelve a crear el grafo con la nueva coneccion
+                        break;
+                    case 2:
+                        //Busca la ruta mas corta
 						System.out.println("Ingrese nombre de ciudad de salida");
-						String ciudad1 = sr.nextLine();
-						System.out.println("Ingrese nombre de ciudad de llegada");
-						String ciudad2 = sr.nextLine();
-						System.out.println("Ingrese la distancia entre ciudades en km");
-						String distancia = sr.nextLine();
-						String agregar = ciudad1.trim()+" "+ciudad2.trim()+" "+distancia.trim();
-						texto.add(agregar);
-						contr.crear_grafo(texto);//Se vuelve a crear el grafo con la nueva coneccion
-						break;
-					case 2:
-						//Busca la ruta mas corta
-						break;
-					case 3:
-						//calcula el centro
-						break;
-					case 4:
-						Cicloprincipal = false;
-						break;
-					default:
-						System.out.println("Ingrese una opcion valida");
-						break;
-				}
-			}
+                        ciudad1 = sw.nextLine();
+                        System.out.println("Ingrese nombre de ciudad de llegada");
+                        ciudad2 = sw.nextLine();
+						System.out.println(controlador.rutaCorta(ciudad1,ciudad2));
+                        break;
+                    case 3:
+                        //calcula el centro
+						System.out.println(controlador.center());
+                        break;
+                    case 4:
+                        Cicloprincipal = false;
+                        break;
+                    default:
+                        System.out.println("\nIngrese una opcion valida");
+                        break;
+                }
+            }
+        } catch (Exception e) {
+            System.out.print(e);
+            e.printStackTrace();
+        }
 
-		}catch(Exception e) {
-			System.out.print(e);
-		}
-		
-	}
-
+    }
+	
+	/** 
+	 * @param pregunta
+	 * @param opciones
+	 * @return int
+	 */
+	public static int pregunta(String pregunta, int opciones)
+    {
+        boolean bucle = true;
+        int respuesta = 0;
+        Scanner scanner = new Scanner(System.in);
+        try 
+        {
+            while(bucle)
+            {
+                System.out.println(pregunta);
+                respuesta = scanner.nextInt();
+                scanner.nextLine();
+                if(respuesta > 0 && respuesta <= opciones) bucle = false;
+                else System.out.println("\nRepuesta no valida.\n");
+            }    
+        } catch (Exception e) {
+            System.out.println("\nRepuesta no valida. Ingrese solamente numeros.\n");
+            respuesta = pregunta(pregunta, opciones);
+        }
+        return respuesta;
+    }
 }
