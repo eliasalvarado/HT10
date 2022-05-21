@@ -4,7 +4,7 @@ import java.util.ArrayList;
 public class Controlador
 {
     int[][] matrizAd = new int[0][0];
-    String[][] noCiudadesvector = new String[0][0];
+    String[][] ciudadesvector = new String[0][0];
 	ArrayList<Nodo> rutas = new ArrayList<Nodo>();
 
 	/** 
@@ -13,7 +13,7 @@ public class Controlador
 	public void crear_grafo(ArrayList<String> texto)
 	{
 		matrizAd = new int[0][0];
-		noCiudadesvector = new String[0][0];
+		ciudadesvector = new String[0][0];
 		rutas = new ArrayList<Nodo>();
 
 		String linea = "";
@@ -66,43 +66,10 @@ public class Controlador
             agregarAdyasencia(p1, p2, d, existeOrigen, existeDestino);
 
         }
-        actualizar(matrizAd, noCiudadesvector);
+        actualizar(matrizAd, ciudadesvector);
     }
     
-	/** 
-	 * @param origen
-	 * @param destino
-	 * @param d
-	 * @return String
-	 */
-	public String modificar(String origen, String destino, int d)
-	{
-        boolean existeOrigen = false;
-        boolean existeDestino = false;
-        int p1 = 0;
-        int p2 = 0;
-
-        for(int i = 0; i < this.rutas.size(); i++)
-		{
-            if(this.rutas.get(i).getNombre().equals(origen))
-			{
-                existeOrigen = true;
-                p1 = i;
-            }
-            if (this.rutas.get(i).getNombre().equals(destino))
-			{
-                existeDestino = true;
-                p2 = i;
-            }
-        }
-        if(existeOrigen && existeDestino)
-		{
-            matrizAd[p1][p2] = d;
-            matrizAd[p2][p1] = d;
-            return "\nEl grafo se ha modificado exitosamente.";
-        }
-        else return "\nLo sentimos. No se logro completar la accion.";
-    }
+	
 	
 	/** 
 	 * @param p1
@@ -130,9 +97,9 @@ public class Controlador
 
 	/** 
 	 * @param matrizAd
-	 * @param noCiudadesvector
+	 * @param ciudadesvector
 	 */
-	public void actualizar(int[][] matrizAd, String[][] noCiudadesvector)
+	public void actualizar(int[][] matrizAd, String[][] ciudadesvector)
 	{
         for (int k = 0; k < this.matrizAd.length; k++) {
             for (int i = 0; i < this.matrizAd.length; i++) {
@@ -141,14 +108,14 @@ public class Controlador
                         int valor = matrizAd[i][k] + matrizAd[k][j];
                         if (matrizAd[i][j] == -1) {
                             matrizAd[i][j] = valor;
-                            noCiudadesvector[i][j] = this.rutas.get(k).getNombre();
+                            ciudadesvector[i][j] = this.rutas.get(k).getNombre();
                         } else {
                             if (valor < matrizAd[i][j]) {
                                 matrizAd[i][j] = valor;
                                 if(k == 0){
-                                    noCiudadesvector[i-1][j-2] = this.rutas.get(6).getNombre();
+                                    ciudadesvector[i-1][j-2] = this.rutas.get(6).getNombre();
                                 }else{
-                                    noCiudadesvector[i][j] = this.rutas.get(k).getNombre();}
+                                    ciudadesvector[i][j] = this.rutas.get(k).getNombre();}
                             }
                         }
                     }
@@ -164,16 +131,16 @@ public class Controlador
 	public int[][] arreglar(int[][] matrizAd)
 	{
         int tamanio = this.matrizAd.length;
-        noCiudadesvector = new String[tamanio][tamanio];
+        ciudadesvector = new String[tamanio][tamanio];
         for(int i = 0; i < tamanio; i++)
 		{
             for(int j = 0; j < tamanio; j++)
 			{
-                noCiudadesvector[i][j] = this.rutas.get(j).getNombre();
+                ciudadesvector[i][j] = this.rutas.get(j).getNombre();
                 if(i == j)
 				{
                     matrizAd[i][j] = 0;
-                    noCiudadesvector[i][j] = "0";
+                    ciudadesvector[i][j] = "0";
                 } 
 				else if(matrizAd[i][j] == 0) matrizAd[i][j] = -1;
             }
@@ -189,7 +156,7 @@ public class Controlador
 	public String rutaCorta(String origen, String destino)
 	{
         Floyd floyd = new Floyd();
-		return floyd.algoritmoFloyd(origen, destino,this.rutas, this.matrizAd, this.noCiudadesvector);
+		return floyd.algoritmoFloyd(origen, destino,this.rutas, this.matrizAd, this.ciudadesvector);
     }
 
 	/** 
@@ -230,88 +197,6 @@ public class Controlador
             p2 = this.rutas.indexOf(n);
         }
         agregarAdyasencia(p1, p2, d, existeOrigen, existeDestino);
-    }
-    
-	/** 
-	 * @param n1
-	 * @param n2
-	 */
-	public void eliminar(String n1, String n2)
-	{
-        for(int i = 0; i < this.matrizAd.length; i++)
-		{
-            for(int j = 0; j < matrizAd[i].length; j++)
-			{
-                System.out.print(matrizAd[i][j] + " ");
-            }
-            System.out.println();
-        }
-        for(int i = 0; i < noCiudadesvector.length; i++)
-		{
-            for(int j = 0; j < noCiudadesvector[i].length; j++)
-			{
-                System.out.print(noCiudadesvector[i][j] + " ");
-            }
-            System.out.println();
-        }
-        boolean existeOrigen = false;
-        boolean existeDestino = false;
-        int p1 = 0;
-        int p2 = 0;
-
-        for(int i = 0; i < this.rutas.size(); i++)
-		{
-            if(this.rutas.get(i).getNombre().equals(n1))
-			{
-                existeOrigen = true;
-                p1 = i;
-            }
-            if(this.rutas.get(i).getNombre().equals(n2))
-			{
-                existeDestino = true;
-                p2 = i;
-            }
-        }
-
-        if(existeOrigen && existeDestino)
-		{
-            matrizAd[p1][p2] = 0;
-            matrizAd[p2][p1] = 0;
-        }
-        for(int i = 0; i < this.matrizAd.length; i++)
-		{
-            for (int j = 0; j < matrizAd[i].length; j++)
-			{
-                System.out.print(matrizAd[i][j] + " ");
-            }
-            System.out.println();
-        }
-        for(int i = 0; i < noCiudadesvector.length; i++)
-		{
-            for(int j = 0; j < noCiudadesvector[i].length; j++)
-			{
-                System.out.print(noCiudadesvector[i][j] + " ");
-            }
-            System.out.println();
-        }
-        matrizAd = arreglar(matrizAd);
-        actualizar(matrizAd, noCiudadesvector);
-        for(int i = 0; i < this.matrizAd.length; i++)
-		{
-            for(int j = 0; j < matrizAd[i].length; j++)
-			{
-                System.out.print(matrizAd[i][j] + " ");
-            }
-            System.out.println();
-        }
-        for(int i = 0; i < noCiudadesvector.length; i++)
-		{
-            for (int j = 0; j < noCiudadesvector[i].length; j++)
-			{
-                System.out.print(noCiudadesvector[i][j] + " ");
-            }
-            System.out.println();
-        }
     }
 	
 	/** 
