@@ -168,7 +168,7 @@ public class Controlador
 		return floyd.algoritmoFloyd(origen, destino,this.rutas, this.matrizAd, this.noCiudadesvector);
     }
 
-    public void agregarMatrizad(String n1, String n2, int d)
+    public void agregarMatrizAd(String n1, String n2, int d)
 	{
         boolean existeOrigen = false;
         boolean existeDestino = false;
