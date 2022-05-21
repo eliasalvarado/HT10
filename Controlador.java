@@ -1,3 +1,14 @@
+/**
+ * Clase Controlador. Sera la encargada de trabajar todo la logica del programa
+ * Autores: 
+ *      Herber Sebastian Silva Muñoz -	21764
+ *      Daniel Esteban Morales Urizar - 21785 
+ *      Elias Alberto Alvarado Raxon -	21808
+ *      
+ * Fecha de creacion: 20/05/2022
+ */
+
+
 import java.util.ArrayList;
 
 
